@@ -57,6 +57,36 @@ public class HeroService {
         return ResponseEntity.ok(res);
     }
 
+    // UPDATE HERO
+    public Optional<HeroEntity> updateHero(@RequestBody HeroEntity heroDetails, @PathVariable Long id){
+
+        return heroRepository.findById(id).map(hero -> {
+            hero.setName(heroDetails.getName());
+            hero.setAlias(heroDetails.getAlias());
+            hero.setAge(heroDetails.getAge());
+            hero.setTeam(heroDetails.getTeam());
+            hero.setVillains(heroDetails.getVillains());
+            return heroRepository.save(hero);
+        });
+    }
+    
+    // DELETE ALL HEROES
+    public ResponseEntity<HeroEntity> deleteAllHeroes(){
+        heroRepository.deleteAll();
+        return ResponseEntity.noContent().build();
+    }
+
+    // DELETE HERO BY ID
+    public ResponseEntity<HeroEntity> deleteHeroById(@PathVariable Long id){
+
+        HeroEntity heroformDB = heroRepository.findById(id).orElse(null);
+        heroRepository.delete(heroformDB);
+        return ResponseEntity.noContent().build();
+        
+    }
+
+
+    
 
 
     
