@@ -97,12 +97,18 @@ public class HeroService {
     // DELETE HERO BY ID
     public ResponseEntity<HeroEntity> deleteHeroById(@PathVariable Long id){
 
-        logger.info("Fetching hero with id:" ,id);
-        HeroEntity heroformDB = heroRepository.findById(id).orElse(null);
-        logger.info("Deleting hero");
-        heroRepository.delete(heroformDB);
-        logger.warn("Not found hero");
-        return ResponseEntity.noContent().build();
-        
+        logger.info("Fetching hero with id: {}", id);
+        Optional<HeroEntity> heroFromDB = heroRepository.findById(id);
+
+        if (heroFromDB.isPresent()) {
+            logger.info("Deleting hero with id: {}", id);
+            heroRepository.delete(heroFromDB.get());
+            logger.info("Deleted hero with id: {}", id);
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.warn("Hero with id {} not found", id);
+            return ResponseEntity.notFound().build();
+        }
+
     }
 }
